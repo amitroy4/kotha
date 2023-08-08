@@ -1,0 +1,69 @@
+.box {
+    height: 286px;
+    margin: 20px 10px 0 10px;
+    padding: 10px;
+    border-radius: 10px;
+    -webkit-box-shadow: 6px 4px 29px -6px rgba(0, 0, 0, 0.21);
+    -moz-box-shadow: 6px 4px 29px -6px rgba(0, 0, 0, 0.21);
+    box-shadow: 6px 4px 29px -6px rgba(0, 0, 0, 0.21);
+}
+
+.box .title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+}
+
+.box .search {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    border: 1px solid #D3D3D3;
+    border-radius: 5px;
+    margin-bottom: 16px;
+}
+
+.box .search .sb {
+    font-size: 20px;
+}
+
+.box .search .text {
+    width: 80%;
+    height: 30px;
+    border: 0px solid transparent;
+    background: transparent;
+}
+
+.box .search .text:focus {
+    outline: none;
+}
+
+
+.box .list {
+    height: 200px;
+    overflow-y: scroll;
+}
+
+.box .list ul {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.box .list ul li {
+    display: flex;
+    justify-content: space-between;
+}
+
+.box .list ul li .left {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+}
+
+.box .list ul li .left img {
+    height: 38px;
+    width: 38px;
+    border-radius: 50%;
+}
