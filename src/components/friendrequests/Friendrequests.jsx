@@ -1,9 +1,38 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import '../commoncomponents.css'
 import { TextField } from '@mui/material'
 import { BsSearch, BsThreeDotsVertical } from 'react-icons/bs';
+import './friendrequests.css'
+import { getDatabase, ref, onValue, set, remove } from "firebase/database";
+import { useSelector } from 'react-redux';
 
 const Friendrequests = () => {
+    const db = getDatabase();
+    let [friendRequest, setFriendRequest] = useState([]);
+    let userData = useSelector((state) => state.loginUser.loginUser)
+
+    useEffect(() => {
+        const usersRef = ref(db, 'friendrequest/');
+        onValue(usersRef, (snapshot) => {
+            let arr = []
+            snapshot.forEach(item => {
+
+                if (userData.uid == item.val().receiverid) {
+                    arr.push({
+                        ...item.val(),
+                        id: item.key,
+                    })
+                }
+            })
+            setFriendRequest(arr)
+        });
+    }, [])
+
+
+    let handleFriendRequestCancel = (item) => {
+        remove(ref(db, 'friendrequest/' + (item.id)));
+    }
+
     return (
         <div className="box">
             <div className="title">
@@ -12,66 +41,21 @@ const Friendrequests = () => {
             </div>
             <div className="list">
                 <ul>
-                    <li>
-                        <div className="left">
-                            <img src="../avatar.svg" alt="" />
-                            <div className="text">
-                                <h4>Jenny Wilson</h4>
-                                <p>Love You.....</p>
+                    {friendRequest.map((item) => (
+                        <li key={item.id}>
+                            <div className="left">
+                                <img src="../avatar.svg" alt="" />
+                                <div className="text">
+                                    <h4>Jenny Wilson</h4>
+                                    <p>Love You.....</p>
+                                </div>
                             </div>
-                        </div>
-                        <div className="right">svs</div>
-                    </li>
-                    <li>
-                        <div className="left">
-                            <img src="../avatar.svg" alt="" />
-                            <div className="text">
-                                <h4>Jenny Wilson</h4>
-                                <p>Love You.....</p>
+                            <div className="right button_section_req">
+                                <div className="btn confirm">Confirm</div>
+                                <div onClick={() => handleFriendRequestCancel(item)} className="btn cancel">Cancel</div>
                             </div>
-                        </div>
-                        <div className="right">svs</div>
-                    </li>
-                    <li>
-                        <div className="left">
-                            <img src="../avatar.svg" alt="" />
-                            <div className="text">
-                                <h4>Jenny Wilson</h4>
-                                <p>Love You.....</p>
-                            </div>
-                        </div>
-                        <div className="right">svs</div>
-                    </li>
-                    <li>
-                        <div className="left">
-                            <img src="../avatar.svg" alt="" />
-                            <div className="text">
-                                <h4>Jenny Wilson</h4>
-                                <p>Love You.....</p>
-                            </div>
-                        </div>
-                        <div className="right">svs</div>
-                    </li>
-                    <li>
-                        <div className="left">
-                            <img src="../avatar.svg" alt="" />
-                            <div className="text">
-                                <h4>Jenny Wilson</h4>
-                                <p>Love You.....</p>
-                            </div>
-                        </div>
-                        <div className="right">svs</div>
-                    </li>
-                    <li>
-                        <div className="left">
-                            <img src="../avatar.svg" alt="" />
-                            <div className="text">
-                                <h4>Jenny Wilson</h4>
-                                <p>Love You.....</p>
-                            </div>
-                        </div>
-                        <div className="right">svs</div>
-                    </li>
+                        </li>
+                    ))}
                 </ul>
             </div>
         </div>

@@ -1,9 +1,11 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import TextField from '@mui/material/TextField';
 import { Button } from '@mui/material';
 import './login.css'
 import { useNavigate } from 'react-router-dom';
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { userdata } from '../../features/userSlice';
+import { useDispatch, useSelector } from 'react-redux';
 
 let signinUser = {
     email: '',
@@ -14,8 +16,16 @@ const Login = () => {
 
     const auth = getAuth();
     const navigate = useNavigate();
+    let dispatch = useDispatch();
     let [userInfo, setUserInfo] = useState(signinUser)
     let [errorMsg, setErrorMsg] = useState("")
+    let userData = useSelector((state) => state.loginUser.loginUser)
+
+    useEffect(() => {
+        if (userData != null) {
+            navigate("/kotha/home")
+        }
+    }, [])
 
     let handleChange = (e) => {
         setUserInfo({
@@ -38,6 +48,7 @@ const Login = () => {
         signInWithEmailAndPassword(auth, email, password)
             .then((user) => {
                 if (user.user.emailVerified) {
+                    dispatch(userdata(user.user))
                     localStorage.setItem("kothaUser", JSON.stringify(user.user))
                     setErrorMsg("")
                     setUserInfo({

@@ -1,10 +1,11 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import TextField from '@mui/material/TextField';
 import { Button } from '@mui/material';
 import './reg.css'
 import { getAuth, createUserWithEmailAndPassword, sendEmailVerification, updateProfile } from "firebase/auth";
 import { useNavigate } from 'react-router-dom';
 import { getDatabase, ref, set } from "firebase/database";
+import { useSelector } from 'react-redux';
 
 let signupUser = {
     email: '',
@@ -19,6 +20,12 @@ const Registration = () => {
     const navigate = useNavigate();
     let [userInfo, setUserInfo] = useState(signupUser)
     let [errorMsg, setErrorMsg] = useState("")
+    let userData = useSelector((state) => state.loginUser.loginUser)
+    useEffect(() => {
+        if (userData != null) {
+            navigate("/kotha/home")
+        }
+    }, [])
 
     let handleChange = (e) => {
         setUserInfo({
