@@ -11,6 +11,21 @@ const People = () => {
     let [peopleList, setPeopleList] = useState([])
     let userData = useSelector((state) => state.loginUser.loginUser)
     let [friendRequest, setFriendRequest] = useState([]);
+    let [friends, setFriends] = useState([]);
+
+    useEffect(() => {
+        const usersRef = ref(db, 'friends/');
+        onValue(usersRef, (snapshot) => {
+            let arr = []
+            snapshot.forEach(item => {
+
+                if (userData.uid == item.val().receiverid || userData.uid == item.val().senderid) {
+                    arr.push(item.val().senderid + item.val().receiverid)
+                }
+            })
+            setFriends(arr)
+        });
+    }, [])
 
     useEffect(() => {
         onValue(ref(db, 'people/'), (snapshot) => {
@@ -50,7 +65,7 @@ const People = () => {
     }, [])
 
     let handleFriendRequestCancel = (item) => {
-        remove(ref(db, 'friendrequest/' + (userData.uid + item.id)));
+        remove(ref(db, 'friendrequest/' + (item)));
     }
 
 
@@ -77,10 +92,14 @@ const People = () => {
                                 </div>
                             </div>
                             <div className="right button_section">
-                                {friendRequest.includes(userData.uid + item.id) ?
-                                    <div onClick={() => handleFriendRequestCancel(item)} className="btn">Cancel</div>
-                                    :
-                                    <div onClick={() => handleFriendRequest(item)} className="btn">Add</div>
+                                {friends.includes(userData.uid + item.id) || friends.includes(item.id + userData.uid) ?
+                                    <div className="btn">Friends</div>
+                                    : friendRequest.includes(userData.uid + item.id) ?
+                                        <div onClick={() => handleFriendRequestCancel(userData.uid + item.id)} className="btn">Cancel</div>
+                                        : friendRequest.includes(item.id + userData.uid) ?
+                                            <div onClick={() => handleFriendRequestCancel(item.id + userData.uid)} className="btn">Reject</div>
+                                            :
+                                            <div onClick={() => handleFriendRequest(item)} className="btn">Add</div>
                                 }
                             </div>
                         </li>

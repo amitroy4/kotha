@@ -10,13 +10,13 @@ const Friendrequests = () => {
     const db = getDatabase();
     let [friendRequest, setFriendRequest] = useState([]);
     let userData = useSelector((state) => state.loginUser.loginUser)
-
+    
     useEffect(() => {
         const usersRef = ref(db, 'friendrequest/');
         onValue(usersRef, (snapshot) => {
             let arr = []
             snapshot.forEach(item => {
-
+                
                 if (userData.uid == item.val().receiverid) {
                     arr.push({
                         ...item.val(),
@@ -27,6 +27,15 @@ const Friendrequests = () => {
             setFriendRequest(arr)
         });
     }, [])
+
+    let handleFriendRequestConfirm = (item) => {
+        console.log(item);
+        set(ref(db, 'friends/' + (item.id)), {
+            ...item
+        }).then(() => {
+            remove(ref(db, 'friendrequest/' + (item.id)));
+        });
+    }
 
 
     let handleFriendRequestCancel = (item) => {
@@ -46,12 +55,12 @@ const Friendrequests = () => {
                             <div className="left">
                                 <img src="../avatar.svg" alt="" />
                                 <div className="text">
-                                    <h4>Jenny Wilson</h4>
+                                    <h4>{item.sendername}</h4>
                                     <p>Love You.....</p>
                                 </div>
                             </div>
                             <div className="right button_section_req">
-                                <div className="btn confirm">Confirm</div>
+                                <div onClick={() => handleFriendRequestConfirm(item)} className="btn confirm">Confirm</div>
                                 <div onClick={() => handleFriendRequestCancel(item)} className="btn cancel">Cancel</div>
                             </div>
                         </li>
