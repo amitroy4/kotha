@@ -6,10 +6,18 @@ import { AiFillHome, AiOutlineUser } from 'react-icons/ai';
 import { HiUserGroup } from 'react-icons/hi';
 import { BsFillChatFill } from 'react-icons/bs';
 import { CgMenuRound } from 'react-icons/cg';
+import { MdPowerSettingsNew } from 'react-icons/md';
+import { FiSettings } from 'react-icons/fi';
+import { useNavigate } from 'react-router-dom';
 
 
 const Rootlayout = () => {
     const location = useLocation()
+    const navigate = useNavigate();
+
+    let handleLogOut = () => {
+        navigate("/login");
+    }
     return (
         <>
             <Grid container spacing={2}>
@@ -45,8 +53,17 @@ const Rootlayout = () => {
                                 </li>
                             </ul>
                             <div className="user">
-                                <img src='../vite.svg' />
-                                <h4 className='username'>user name</h4>
+                                <div className="left">
+                                    <img src="../avatar.svg" alt="" />
+                                    <div className="text">
+                                        <h4>Jenny Wilson</h4>
+                                        <p>Love You.....</p>
+                                    </div>
+                                </div>
+                                <div className="right">
+                                    <FiSettings className='settings' />
+                                    <MdPowerSettingsNew onClick={handleLogOut} className='logout' />
+                                </div>
                             </div>
                         </div>
                     </div>

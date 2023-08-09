@@ -2,8 +2,9 @@ import React, { useState } from 'react'
 import TextField from '@mui/material/TextField';
 import { Button } from '@mui/material';
 import './reg.css'
-import { getAuth, createUserWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, sendEmailVerification, updateProfile } from "firebase/auth";
 import { useNavigate } from 'react-router-dom';
+import { getDatabase, ref, set } from "firebase/database";
 
 let signupUser = {
     email: '',
@@ -14,6 +15,7 @@ let signupUser = {
 const Registration = () => {
 
     const auth = getAuth();
+    const db = getDatabase();
     const navigate = useNavigate();
     let [userInfo, setUserInfo] = useState(signupUser)
     let [errorMsg, setErrorMsg] = useState("")
@@ -42,17 +44,26 @@ const Registration = () => {
         let { email, password } = userInfo
 
         createUserWithEmailAndPassword(auth, email, password).then((user) => {
-
-            sendEmailVerification(auth.currentUser)
-                .then(() => {
-                    setUserInfo({
-                        email: '',
-                        fullname: '',
-                        password: '',
-                    })
-                    setErrorMsg("")
-                    navigate("/login");
-                });
+            updateProfile(auth.currentUser, {
+                displayName: userInfo.fullname, photoURL: "../avatar.svg"
+            }).then(() => {
+                sendEmailVerification(auth.currentUser)
+                    .then(() => {
+                        console.log(user.user.uid)
+                        set(ref(db, 'people/' + user.user.uid), {
+                            username: userInfo.fullname,
+                            email: userInfo.email,
+                            profile_picture: user.user.photoURL
+                        });
+                        setUserInfo({
+                            email: '',
+                            fullname: '',
+                            password: '',
+                        })
+                        setErrorMsg("")
+                        navigate("/login");
+                    });
+            })
         }).catch((error) => {
             const errorMessage = error.message;
             setErrorMsg(errorMessage)

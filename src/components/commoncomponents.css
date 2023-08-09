@@ -1,11 +1,12 @@
 .box {
-    height: 286px;
+    height: 43vh;
     margin: 20px 10px 0 10px;
     padding: 10px;
     border-radius: 10px;
     -webkit-box-shadow: 6px 4px 29px -6px rgba(0, 0, 0, 0.21);
     -moz-box-shadow: 6px 4px 29px -6px rgba(0, 0, 0, 0.21);
     box-shadow: 6px 4px 29px -6px rgba(0, 0, 0, 0.21);
+    overflow: hidden;
 }
 
 .box .title {
@@ -41,7 +42,7 @@
 
 
 .box .list {
-    height: 200px;
+    height: 33vh;
     overflow-y: scroll;
 }
 

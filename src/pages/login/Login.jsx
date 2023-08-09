@@ -39,7 +39,7 @@ const Login = () => {
             .then((user) => {
                 if (user.user.emailVerified) {
                     setErrorMsg("")
-                    navigate("/home");
+                    navigate("/kotha/home");
                     setUserInfo({
                         email: '',
                         password: '',
