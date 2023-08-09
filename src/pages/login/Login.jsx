@@ -38,12 +38,13 @@ const Login = () => {
         signInWithEmailAndPassword(auth, email, password)
             .then((user) => {
                 if (user.user.emailVerified) {
+                    localStorage.setItem("kothaUser", JSON.stringify(user.user))
                     setErrorMsg("")
-                    navigate("/kotha/home");
                     setUserInfo({
                         email: '',
                         password: '',
                     })
+                    navigate("/kotha/home");
                 } else {
                     setErrorMsg("Please verify your email first")
                 }
