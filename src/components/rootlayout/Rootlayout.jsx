@@ -57,7 +57,7 @@ const Rootlayout = () => {
                                     <img src="../avatar.svg" alt="" />
                                     <div className="text">
                                         <h4>Jenny Wilson</h4>
-                                        <p>Love You.....</p>
+                                        <p>Edit Profile</p>
                                     </div>
                                 </div>
                                 <div className="right">
