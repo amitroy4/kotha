@@ -17,6 +17,10 @@
     margin-bottom: 16px;
 }
 
+.box .title .dot {
+    cursor: pointer;
+}
+
 .box .search {
     display: flex;
     align-items: center;
@@ -64,12 +68,13 @@
     align-items: center;
 }
 
-.box .list ul li .left .text h4{
+.box .list ul li .left .text h4 {
     font-size: 18px;
     font-weight: 600;
     color: #222222;
 }
-.box .list ul li .left .text p{
+
+.box .list ul li .left .text p {
     font-size: 14px;
     font-weight: 400;
     color: #7A7A7A;

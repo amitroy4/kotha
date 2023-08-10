@@ -1,9 +1,31 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import '../commoncomponents.css'
 import { TextField } from '@mui/material'
 import { BsSearch, BsThreeDotsVertical } from 'react-icons/bs';
 
+import { useSelector } from 'react-redux';
+import { getDatabase, ref, set, push, onValue } from "firebase/database";
+
 const Group = () => {
+    const db = getDatabase();
+    let [groupList, setGroupList] = useState([])
+    let userData = useSelector((state) => state.loginUser.loginUser)
+
+    useEffect(() => {
+        const groupsRef = ref(db, 'groups/');
+        onValue(groupsRef, (snapshot) => {
+            let arr = []
+            snapshot.forEach(item => {
+                if (userData.uid != item.val().adminid) {
+
+                    arr.push({
+                        ...item.val(), groupid: item.key
+                    });
+                }
+            })
+            setGroupList(arr)
+        });
+    }, [])
     return (
         <div className="box">
             <div className="title">
@@ -16,66 +38,19 @@ const Group = () => {
             </div>
             <div className="list">
                 <ul>
-                    <li>
-                        <div className="left">
-                            <img src="../avatar.svg" alt="" />
-                            <div className="text">
-                                <h4>Jenny Wilson</h4>
-                                <p>Love You.....</p>
+                    {groupList.map((item) => (
+                        <li key={item.groupid}>
+                            <div className="left">
+                                <img src="../avatar.svg" alt="" />
+                                <div className="text">
+                                    <p>Admin: {item.adminname}</p>
+                                    <h4>{item.groupname}</h4>
+                                    <p>{item.grouptagline}</p>
+                                </div>
                             </div>
-                        </div>
-                        <div className="right">svs</div>
-                    </li>
-                    <li>
-                        <div className="left">
-                            <img src="../avatar.svg" alt="" />
-                            <div className="text">
-                                <h4>Jenny Wilson</h4>
-                                <p>Love You.....</p>
-                            </div>
-                        </div>
-                        <div className="right">svs</div>
-                    </li>
-                    <li>
-                        <div className="left">
-                            <img src="../avatar.svg" alt="" />
-                            <div className="text">
-                                <h4>Jenny Wilson</h4>
-                                <p>Love You.....</p>
-                            </div>
-                        </div>
-                        <div className="right">svs</div>
-                    </li>
-                    <li>
-                        <div className="left">
-                            <img src="../avatar.svg" alt="" />
-                            <div className="text">
-                                <h4>Jenny Wilson</h4>
-                                <p>Love You.....</p>
-                            </div>
-                        </div>
-                        <div className="right">svs</div>
-                    </li>
-                    <li>
-                        <div className="left">
-                            <img src="../avatar.svg" alt="" />
-                            <div className="text">
-                                <h4>Jenny Wilson</h4>
-                                <p>Love You.....</p>
-                            </div>
-                        </div>
-                        <div className="right">svs</div>
-                    </li>
-                    <li>
-                        <div className="left">
-                            <img src="../avatar.svg" alt="" />
-                            <div className="text">
-                                <h4>Jenny Wilson</h4>
-                                <p>Love You.....</p>
-                            </div>
-                        </div>
-                        <div className="right">svs</div>
-                    </li>
+                            <div className="right">svs</div>
+                        </li>
+                    ))}
                 </ul>
             </div>
         </div>
