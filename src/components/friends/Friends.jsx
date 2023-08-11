@@ -42,8 +42,8 @@ const Friends = () => {
             set(push(ref(db, "block/")), {
                 blockreceivername: item.sendername,
                 blockreceiverid: item.senderid,
-                blocksendername: item.recivername,
-                blocksenderid: item.reciverid,
+                blocksendername: item.receivername,
+                blocksenderid: item.receiverid,
             }).then(() => {
                 remove(ref(db, "friends/" + item.id));
             })
