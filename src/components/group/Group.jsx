@@ -10,6 +10,8 @@ const Group = () => {
     const db = getDatabase();
     let [groupList, setGroupList] = useState([])
     let userData = useSelector((state) => state.loginUser.loginUser)
+    let [groupMemberList, setGroupMemberList] = useState([])
+    let [membersList, setMembersList] = useState([])
 
     useEffect(() => {
         const groupsRef = ref(db, 'groups/');
@@ -26,6 +28,48 @@ const Group = () => {
             setGroupList(arr)
         });
     }, [])
+
+
+    useEffect(() => {
+        const membersRef = ref(db, 'members/');
+        onValue(membersRef, (snapshot) => {
+            let arr = []
+            snapshot.forEach(item => {
+                arr.push(item.val().groupid);
+            })
+            setMembersList(arr)
+            // console.log(arr);
+        });
+    }, [])
+
+    let handleGroupJoin = (item) => {
+        set(push(ref(db, 'grouprequest/')), {
+            adminid: item.adminid,
+            adminname: item.adminname,
+            groupid: item.groupid,
+            groupname: item.groupname,
+            userid: userData.uid,
+            username: userData.displayName,
+        })
+    }
+
+
+    useEffect(() => {
+        const groupsRef = ref(db, 'grouprequest/');
+        onValue(groupsRef, (snapshot) => {
+            let arr = []
+            snapshot.forEach(item => {
+                if (item.val().userid == userData.uid) {
+
+                    arr.push(item.val().groupid);
+                }
+            })
+            setGroupMemberList(arr)
+        });
+    }, [])
+
+
+
     return (
         <div className="box">
             <div className="title">
@@ -48,7 +92,17 @@ const Group = () => {
                                     <p>{item.grouptagline}</p>
                                 </div>
                             </div>
-                            <div className="right">svs</div>
+                            <div className="right button_section">
+                                {membersList.includes(item.groupid)
+                                    ? <div className="btn">Joined</div>
+                                    : groupMemberList.indexOf(item.groupid) != -1
+                                        ? <>
+                                            <div className="btn">Request Send</div>
+                                            <div className="btn">Cancel</div>
+                                        </>
+                                        : <div onClick={() => handleGroupJoin(item)} className="btn">Add</div>
+                                }
+                            </div>
                         </li>
                     ))}
                 </ul>
