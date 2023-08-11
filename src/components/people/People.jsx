@@ -12,6 +12,7 @@ const People = () => {
     let userData = useSelector((state) => state.loginUser.loginUser)
     let [friendRequest, setFriendRequest] = useState([]);
     let [friends, setFriends] = useState([]);
+    let [blocklist, setBlocklist] = useState([])
 
     useEffect(() => {
         const usersRef = ref(db, 'friends/');
@@ -69,6 +70,18 @@ const People = () => {
     }
 
 
+    useEffect(() => {
+        const usersRef = ref(db, 'block/');
+        onValue(usersRef, (snapshot) => {
+            let arr = []
+            snapshot.forEach(item => {
+                arr.push(item.val().blockreceiverid + item.val().blocksenderid)
+            })
+            setBlocklist(arr)
+        });
+    }, [])
+
+
 
     return (
         <div className="box">
@@ -92,14 +105,17 @@ const People = () => {
                                 </div>
                             </div>
                             <div className="right button_section">
-                                {friends.includes(userData.uid + item.id) || friends.includes(item.id + userData.uid) ?
-                                    <div className="btn">Friends</div>
-                                    : friendRequest.includes(userData.uid + item.id) ?
-                                        <div onClick={() => handleFriendRequestCancel(userData.uid + item.id)} className="btn">Cancel</div>
-                                        : friendRequest.includes(item.id + userData.uid) ?
-                                            <div onClick={() => handleFriendRequestCancel(item.id + userData.uid)} className="btn">Reject</div>
-                                            :
-                                            <div onClick={() => handleFriendRequest(item)} className="btn">Add</div>
+                                {blocklist.includes(userData.uid + item.id) ? <div className="btn">Block</div> :
+                                    blocklist.includes(item.id + userData.uid) ? <div className="btn">Blocked</div>
+                                        :
+                                        friends.includes(userData.uid + item.id) || friends.includes(item.id + userData.uid) ?
+                                            <div className="btn">Friends</div>
+                                            : friendRequest.includes(userData.uid + item.id) ?
+                                                <div onClick={() => handleFriendRequestCancel(userData.uid + item.id)} className="btn">Cancel</div>
+                                                : friendRequest.includes(item.id + userData.uid) ?
+                                                    <div onClick={() => handleFriendRequestCancel(item.id + userData.uid)} className="btn">Reject</div>
+                                                    :
+                                                    <div onClick={() => handleFriendRequest(item)} className="btn">Add</div>
                                 }
                             </div>
                         </li>

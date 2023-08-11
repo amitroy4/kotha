@@ -85,3 +85,7 @@
     width: 38px;
     border-radius: 50%;
 }
+
+.box .list ul li .right .dot {
+    cursor: pointer;
+}

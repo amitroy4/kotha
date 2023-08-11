@@ -1,9 +1,39 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import '../commoncomponents.css'
 import { TextField } from '@mui/material'
 import { BsSearch, BsThreeDotsVertical } from 'react-icons/bs';
+import { getDatabase, ref, onValue, remove } from "firebase/database";
+import { useSelector } from 'react-redux';
 
 const Blocklist = () => {
+    const db = getDatabase();
+
+    let userData = useSelector((state) => state.loginUser.loginUser)
+
+    let [blocklist, setBlocklist] = useState([])
+
+    useEffect(() => {
+        const blockRef = ref(db, 'block/');
+        onValue(blockRef, (snapshot) => {
+            let arr = []
+            snapshot.forEach((item) => {
+                if (item.val().blockreceiverid != userData.uid) {
+                    arr.push({
+                        ...item.val(), id: item.key
+                    })
+                }
+            })
+            setBlocklist(arr)
+        });
+    }, [])
+
+
+    let handleUnblock = (item) => {
+        remove(ref(db, "block/" + item.id));
+    }
+
+
+
     return (
         <div className="box">
             <div className="title">
@@ -12,66 +42,20 @@ const Blocklist = () => {
             </div>
             <div className="list">
                 <ul>
-                    <li>
-                        <div className="left">
-                            <img src="../avatar.svg" alt="" />
-                            <div className="text">
-                                <h4>Jenny Wilson</h4>
-                                <p>Love You.....</p>
+                    {blocklist.map((item) => (
+                        <li key={item.id}>
+                            <div className="left">
+                                <img src="../avatar.svg" alt="" />
+                                <div className="text">
+                                    <h4>{item.blockreceivername}</h4>
+                                    <p>Love You.....</p>
+                                </div>
                             </div>
-                        </div>
-                        <div className="right">svs</div>
-                    </li>
-                    <li>
-                        <div className="left">
-                            <img src="../avatar.svg" alt="" />
-                            <div className="text">
-                                <h4>Jenny Wilson</h4>
-                                <p>Love You.....</p>
+                            <div className="right button_section">
+                                <div onClick={() => handleUnblock(item)} className="btn">Unblock</div>
                             </div>
-                        </div>
-                        <div className="right">svs</div>
-                    </li>
-                    <li>
-                        <div className="left">
-                            <img src="../avatar.svg" alt="" />
-                            <div className="text">
-                                <h4>Jenny Wilson</h4>
-                                <p>Love You.....</p>
-                            </div>
-                        </div>
-                        <div className="right">svs</div>
-                    </li>
-                    <li>
-                        <div className="left">
-                            <img src="../avatar.svg" alt="" />
-                            <div className="text">
-                                <h4>Jenny Wilson</h4>
-                                <p>Love You.....</p>
-                            </div>
-                        </div>
-                        <div className="right">svs</div>
-                    </li>
-                    <li>
-                        <div className="left">
-                            <img src="../avatar.svg" alt="" />
-                            <div className="text">
-                                <h4>Jenny Wilson</h4>
-                                <p>Love You.....</p>
-                            </div>
-                        </div>
-                        <div className="right">svs</div>
-                    </li>
-                    <li>
-                        <div className="left">
-                            <img src="../avatar.svg" alt="" />
-                            <div className="text">
-                                <h4>Jenny Wilson</h4>
-                                <p>Love You.....</p>
-                            </div>
-                        </div>
-                        <div className="right">svs</div>
-                    </li>
+                        </li>
+                    ))}
                 </ul>
             </div>
         </div>

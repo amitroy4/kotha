@@ -2,13 +2,59 @@ import React, { useEffect, useState } from 'react'
 import '../commoncomponents.css'
 import { TextField } from '@mui/material'
 import { BsSearch, BsThreeDotsVertical } from 'react-icons/bs';
-import { getDatabase, ref, onValue, set, remove } from "firebase/database";
+import { getDatabase, ref, onValue, set, remove, push } from "firebase/database";
 import { useSelector } from 'react-redux';
+import Popper from '@mui/material/Popper';
+import Paper from '@mui/material/Paper';
+import Fade from '@mui/material/Fade';
+import { Button } from '@mui/material'
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Grid from '@mui/material/Grid';
+
 
 const Friends = () => {
     const db = getDatabase();
     let [friends, setFriends] = useState([]);
     let userData = useSelector((state) => state.loginUser.loginUser)
+
+    const [anchorEl, setanchorEl] = React.useState(null);
+    const [open, setOpen] = React.useState(false);
+    const [placement, setPlacement] = React.useState();
+
+    const handleClick = (newPlacement) => (event) => {
+        setanchorEl(event.currentTarget);
+        setOpen((prev) => placement !== newPlacement || !prev);
+        setPlacement(newPlacement);
+    };
+
+    let handleBlock = (item) => {
+        if (userData.uid == item.senderid) {
+            set(push(ref(db, "block/")), {
+                blockreceivername: item.receivername,
+                blockreceiverid: item.receiverid,
+                blocksendername: item.sendername,
+                blocksenderid: item.senderid,
+            }).then(() => {
+                remove(ref(db, "friends/" + item.id));
+            })
+        } else {
+            set(push(ref(db, "block/")), {
+                blockreceivername: item.sendername,
+                blockreceiverid: item.senderid,
+                blocksendername: item.recivername,
+                blocksenderid: item.reciverid,
+            }).then(() => {
+                remove(ref(db, "friends/" + item.id));
+            })
+        }
+
+    }
+
+    let handleUnfriend = (item) => {
+        remove(ref(db, "friends/" + item.id));
+    }
+
 
     useEffect(() => {
         const usersRef = ref(db, 'friends/');
@@ -26,8 +72,6 @@ const Friends = () => {
             setFriends(arr)
         });
     }, [])
-
-
 
     return (
         <div className="box">
@@ -56,7 +100,20 @@ const Friends = () => {
                                     <p>Love You.....</p>
                                 </div>
                             </div>
-                            <div className="right">svs</div>
+                            <div className="right">
+                                <BsThreeDotsVertical className='dot' onClick={handleClick('bottom-end')} />
+                                <Popper open={open} anchorEl={anchorEl} placement={placement} transition>
+                                    {({ TransitionProps }) => (
+                                        <Fade {...TransitionProps} timeout={350}>
+                                            <Paper>
+                                                <Button onClick={() => handleUnfriend(item)} sx={{ pl: 4, pr: 4 }} className='btn' size="small">Unfriend</Button>
+                                                <br />
+                                                <Button onClick={() => handleBlock(item)} sx={{ pl: 4, pr: 4 }} className='btn' size="small">Block</Button>
+                                            </Paper>
+                                        </Fade>
+                                    )}
+                                </Popper>
+                            </div>
                         </li>
                     ))}
                 </ul>
