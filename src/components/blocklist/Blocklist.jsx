@@ -17,7 +17,7 @@ const Blocklist = () => {
         onValue(blockRef, (snapshot) => {
             let arr = []
             snapshot.forEach((item) => {
-                if (item.val().blocksenderid == userData.uid) {
+                if (item.val().blocksenderid == userData.uid || item.val().blocksenderid == userData.uid) {
                     arr.push({
                         ...item.val(), id: item.key
                     })
