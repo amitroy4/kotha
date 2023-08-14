@@ -41,22 +41,26 @@ const Blocklist = () => {
                 <BsThreeDotsVertical />
             </div>
             <div className="list">
-                <ul>
-                    {blocklist.map((item) => (
-                        <li key={item.id}>
-                            <div className="left">
-                                <img src="../avatar.svg" alt="" />
-                                <div className="text">
-                                    <h4>{item.blockreceivername}</h4>
-                                    <p>Love You.....</p>
+                {blocklist.length
+                    ? <ul>
+                        {blocklist.map((item) => (
+                            <li key={item.id}>
+                                <div className="left">
+                                    <img src="../avatar.svg" alt="" />
+                                    <div className="text">
+                                        <h4>{item.blockreceivername}</h4>
+                                        <p>Love You.....</p>
+                                    </div>
                                 </div>
-                            </div>
-                            <div className="right button_section">
-                                <div onClick={() => handleUnblock(item)} className="btn">Unblock</div>
-                            </div>
-                        </li>
-                    ))}
-                </ul>
+                                <div className="right button_section">
+                                    <div onClick={() => handleUnblock(item)} className="btn">Unblock</div>
+                                </div>
+                            </li>
+                        ))}
+                    </ul>
+                    : <p>Empty Block List</p>
+                }
+
             </div>
         </div>
     )

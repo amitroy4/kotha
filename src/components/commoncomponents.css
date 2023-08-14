@@ -89,3 +89,11 @@
 .box .list ul li .right .dot {
     cursor: pointer;
 }
+
+.box .list .creategrouplink{
+    color: blue;
+    transition: all linear 0.4s;
+}
+.box .list .creategrouplink:hover{
+    cursor: pointer;
+}

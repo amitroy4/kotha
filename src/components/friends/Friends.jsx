@@ -84,39 +84,44 @@ const Friends = () => {
                 <input className="text" type="text" placeholder='Search' />
             </div>
             <div className="list">
-                <ul>
-                    {friends.map((item) => (
-                        <li key={item.id}>
-                            <div className="left">
-                                <img src="../avatar.svg" alt="" />
-                                <div className="text">
-                                    {
-                                        item.receiverid == userData.uid
-                                            ?
-                                            <h4>{item.sendername}</h4>
-                                            :
-                                            <h4>{item.receivername}</h4>
-                                    }
-                                    <p>Love You.....</p>
+                {friends.length
+                    ? <ul>
+                        {friends.map((item) => (
+                            <li key={item.id}>
+                                <div className="left">
+                                    <img src="../avatar.svg" alt="" />
+                                    <div className="text">
+                                        {
+                                            item.receiverid == userData.uid
+                                                ?
+                                                <h4>{item.sendername}</h4>
+                                                :
+                                                <h4>{item.receivername}</h4>
+                                        }
+                                        <p>Love You.....</p>
+                                    </div>
                                 </div>
-                            </div>
-                            <div className="right">
-                                <BsThreeDotsVertical className='dot' onClick={handleClick('bottom-end')} />
-                                <Popper open={open} anchorEl={anchorEl} placement={placement} transition>
-                                    {({ TransitionProps }) => (
-                                        <Fade {...TransitionProps} timeout={350}>
-                                            <Paper>
-                                                <Button onClick={() => handleUnfriend(item)} sx={{ pl: 4, pr: 4 }} className='btn' size="small">Unfriend</Button>
-                                                <br />
-                                                <Button onClick={() => handleBlock(item)} sx={{ pl: 4, pr: 4 }} className='btn' size="small">Block</Button>
-                                            </Paper>
-                                        </Fade>
-                                    )}
-                                </Popper>
-                            </div>
-                        </li>
-                    ))}
-                </ul>
+                                <div className="right">
+                                    <BsThreeDotsVertical className='dot' onClick={handleClick('bottom-end')} />
+                                    <Popper open={open} anchorEl={anchorEl} placement={placement} transition>
+                                        {({ TransitionProps }) => (
+                                            <Fade {...TransitionProps} timeout={350}>
+                                                <Paper>
+                                                    <Button onClick={() => handleUnfriend(item)} sx={{ pl: 4, pr: 4 }} className='btn' size="small">Unfriend</Button>
+                                                    <br />
+                                                    <Button onClick={() => handleBlock(item)} sx={{ pl: 4, pr: 4 }} className='btn' size="small">Block</Button>
+                                                </Paper>
+                                            </Fade>
+                                        )}
+                                    </Popper>
+                                </div>
+                            </li>
+                        ))}
+                    </ul>
+                    : <p>No Friends</p>
+
+                }
+
             </div>
         </div>
     )

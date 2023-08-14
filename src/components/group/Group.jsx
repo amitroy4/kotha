@@ -38,7 +38,6 @@ const Group = () => {
                 arr.push(item.val().groupid);
             })
             setMembersList(arr)
-            // console.log(arr);
         });
     }, [])
 
@@ -81,31 +80,35 @@ const Group = () => {
                 <input className="text" type="text" placeholder='Search' />
             </div>
             <div className="list">
-                <ul>
-                    {groupList.map((item) => (
-                        <li key={item.groupid}>
-                            <div className="left">
-                                <img src="../avatar.svg" alt="" />
-                                <div className="text">
-                                    <p>Admin: {item.adminname}</p>
-                                    <h4>{item.groupname}</h4>
-                                    <p>{item.grouptagline}</p>
+                {groupList.length
+                    ? <ul>
+                        {groupList.map((item) => (
+                            <li key={item.groupid}>
+                                <div className="left">
+                                    <img src="../avatar.svg" alt="" />
+                                    <div className="text">
+                                        <p>Admin: {item.adminname}</p>
+                                        <h4>{item.groupname}</h4>
+                                        <p>{item.grouptagline}</p>
+                                    </div>
                                 </div>
-                            </div>
-                            <div className="right button_section">
-                                {membersList.includes(item.groupid)
-                                    ? <div className="btn">Joined</div>
-                                    : groupMemberList.indexOf(item.groupid) != -1
-                                        ? <>
-                                            <div className="btn">Request Send</div>
-                                            <div className="btn">Cancel</div>
-                                        </>
-                                        : <div onClick={() => handleGroupJoin(item)} className="btn">Add</div>
-                                }
-                            </div>
-                        </li>
-                    ))}
-                </ul>
+                                <div className="right button_section">
+                                    {membersList.includes(item.groupid)
+                                        ? <div className="btn">Joined</div>
+                                        : groupMemberList.indexOf(item.groupid) != -1
+                                            ? <>
+                                                <div className="btn">Request Send</div>
+                                                <div className="btn">Cancel</div>
+                                            </>
+                                            : <div onClick={() => handleGroupJoin(item)} className="btn">Add</div>
+                                    }
+                                </div>
+                            </li>
+                        ))}
+                    </ul>
+                    : <p>No Groups</p>
+                }
+
             </div>
         </div>
     )

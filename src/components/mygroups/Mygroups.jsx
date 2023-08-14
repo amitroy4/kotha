@@ -135,8 +135,8 @@ const Mygroups = () => {
                 grouptagline: "",
             })
             setError("")
-            setLoader(false)
-            setOpen(false)
+            setLoader(false);
+            setOpen1(false);
         });
     }
 
@@ -245,99 +245,46 @@ const Mygroups = () => {
                 <input className="text" type="text" placeholder='Search' />
             </div>
             <div className="list">
-                <ul>
-                    {groupList.map((item) => (
-                        <li key={item.groupid}>
-                            <div className="left">
-                                <img src="../avatar.svg" alt="" />
-                                <div className="text">
-                                    <p>Admin: {item.adminname}</p>
-                                    <h4>{item.groupname}</h4>
-                                    <p>{item.grouptagline}</p>
+                {groupList.length
+                    ? <ul>
+                        {groupList.map((item) => (
+                            <li key={item.groupid}>
+                                <div className="left">
+                                    <img src="../avatar.svg" alt="" />
+                                    <div className="text">
+                                        <p>Admin: {item.adminname}</p>
+                                        <h4>{item.groupname}</h4>
+                                        <p>{item.grouptagline}</p>
+                                    </div>
                                 </div>
-                            </div>
-                            <div className="right button_section">
+                                <div className="right button_section">
 
-                                <div onClick={() => handleOpenReq(item)} className="btn">Request</div>
-                                <div onClick={() => handleOpenMember(item)} className="btn">Member</div>
+                                    <div onClick={() => handleOpenReq(item)} className="btn">Request</div>
+                                    <div onClick={() => handleOpenMember(item)} className="btn">Member</div>
 
-                            </div>
+                                </div>
 
-                        </li>
+                            </li>
 
-                    ))}
+                        ))}
 
-                    {/* ======================== Modal for Group Request Start ======================== */}
-                    <Modal
-                        open={openReq}
-                        onClose={handleCloseReq}
-                        aria-labelledby="modal-modal-title"
-                        aria-describedby="modal-modal-description"
-                    >
-                        <Box sx={styleReq}>
-                            <Typography id="modal-modal-title" variant="h6" component="h2">
-                                Group Join Request
-                            </Typography>
-                            <Typography id="modal-modal-title" variant="h8" component="h4" color={"error"}>
-                                {groupReqCount} join request
-                            </Typography>
-                            <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                                <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
-                                    {groupReqList.map(item => (
-                                        <>
-                                            <ListItem alignItems="flex-start">
-                                                <ListItemAvatar>
-                                                    <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
-                                                </ListItemAvatar>
-                                                <ListItemText
-                                                    primary={item.username}
-                                                    secondary={
-                                                        <React.Fragment>
-                                                            <Typography
-                                                                sx={{ display: 'inline' }}
-                                                                component="span"
-                                                                variant="body2"
-                                                                color="text.primary"
-                                                            >
-                                                            </Typography>
-                                                            {" — Wants to join your group."}
-                                                            <br />
-                                                            <Button onClick={() => handleMemberAccept(item)} variant="contained" size="small" color='success' style={{ marginTop: "10px", marginBottom: "10px" }}>Accept</Button>
-                                                            <Button onClick={() => handleMemberDelete(item)} variant="contained" size="small" color='error' style={{ marginLeft: "20px", marginTop: "10px", marginBottom: "10px" }}>Delete</Button>
-                                                        </React.Fragment>
-
-                                                    }
-                                                />
-                                            </ListItem>
-                                            <Divider variant="inset" component="li" />
-                                        </>
-                                    ))}
-                                </List>
-                            </Typography>
-                        </Box>
-                    </Modal>
-                    {/* ======================== Modal for Group Request End ======================== */}
-
-
-
-                    {/* ======================== Modal for Group Member Start ======================== */}
-                    <div>
+                        {/* ======================== Modal for Group Request Start ======================== */}
                         <Modal
-                            open={openMember}
-                            onClose={handleCloseMember}
+                            open={openReq}
+                            onClose={handleCloseReq}
                             aria-labelledby="modal-modal-title"
                             aria-describedby="modal-modal-description"
                         >
-                            <Box sx={styleMember}>
+                            <Box sx={styleReq}>
                                 <Typography id="modal-modal-title" variant="h6" component="h2">
-                                    Group Members
+                                    Group Join Request
                                 </Typography>
                                 <Typography id="modal-modal-title" variant="h8" component="h4" color={"error"}>
-                                    {groupMemberCount} member
+                                    {groupReqCount} join request
                                 </Typography>
                                 <Typography id="modal-modal-description" sx={{ mt: 2 }}>
                                     <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
-                                        {myMembersList.map(item => (
+                                        {groupReqList.map(item => (
                                             <>
                                                 <ListItem alignItems="flex-start">
                                                     <ListItemAvatar>
@@ -356,7 +303,8 @@ const Mygroups = () => {
                                                                 </Typography>
                                                                 {" — Wants to join your group."}
                                                                 <br />
-                                                                <Button onClick={() => handleMemberRemove(item)} variant="contained" size="small" color='error' style={{ marginLeft: "20px", marginTop: "10px", marginBottom: "10px" }}>Remove</Button>
+                                                                <Button onClick={() => handleMemberAccept(item)} variant="contained" size="small" color='success' style={{ marginTop: "10px", marginBottom: "10px" }}>Accept</Button>
+                                                                <Button onClick={() => handleMemberDelete(item)} variant="contained" size="small" color='error' style={{ marginLeft: "20px", marginTop: "10px", marginBottom: "10px" }}>Delete</Button>
                                                             </React.Fragment>
 
                                                         }
@@ -369,9 +317,66 @@ const Mygroups = () => {
                                 </Typography>
                             </Box>
                         </Modal>
-                    </div>
-                    {/* ======================== Modal for Group Member End ======================== */}
-                </ul>
+                        {/* ======================== Modal for Group Request End ======================== */}
+
+
+
+                        {/* ======================== Modal for Group Member Start ======================== */}
+                        <div>
+                            <Modal
+                                open={openMember}
+                                onClose={handleCloseMember}
+                                aria-labelledby="modal-modal-title"
+                                aria-describedby="modal-modal-description"
+                            >
+                                <Box sx={styleMember}>
+                                    <Typography id="modal-modal-title" variant="h6" component="h2">
+                                        Group Members
+                                    </Typography>
+                                    <Typography id="modal-modal-title" variant="h8" component="h4" color={"error"}>
+                                        {groupMemberCount} member
+                                    </Typography>
+                                    <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                                        <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
+                                            {myMembersList.map(item => (
+                                                <>
+                                                    <ListItem alignItems="flex-start">
+                                                        <ListItemAvatar>
+                                                            <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
+                                                        </ListItemAvatar>
+                                                        <ListItemText
+                                                            primary={item.username}
+                                                            secondary={
+                                                                <React.Fragment>
+                                                                    <Typography
+                                                                        sx={{ display: 'inline' }}
+                                                                        component="span"
+                                                                        variant="body2"
+                                                                        color="text.primary"
+                                                                    >
+                                                                    </Typography>
+                                                                    {" — Wants to join your group."}
+                                                                    <br />
+                                                                    <Button onClick={() => handleMemberRemove(item)} variant="contained" size="small" color='error' style={{ marginLeft: "20px", marginTop: "10px", marginBottom: "10px" }}>Remove</Button>
+                                                                </React.Fragment>
+
+                                                            }
+                                                        />
+                                                    </ListItem>
+                                                    <Divider variant="inset" component="li" />
+                                                </>
+                                            ))}
+                                        </List>
+                                    </Typography>
+                                </Box>
+                            </Modal>
+                        </div>
+                        {/* ======================== Modal for Group Member End ======================== */}
+                    </ul>
+                    : <>
+                        <p>No Groups. Please <span className='creategrouplink' onClick={handleOpen1}>Create a Group.</span></p>
+                    </>
+                }
             </div>
         </div>
     )

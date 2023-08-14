@@ -10,13 +10,13 @@ const Friendrequests = () => {
     const db = getDatabase();
     let [friendRequest, setFriendRequest] = useState([]);
     let userData = useSelector((state) => state.loginUser.loginUser)
-    
+
     useEffect(() => {
         const usersRef = ref(db, 'friendrequest/');
         onValue(usersRef, (snapshot) => {
             let arr = []
             snapshot.forEach(item => {
-                
+
                 if (userData.uid == item.val().receiverid) {
                     arr.push({
                         ...item.val(),
@@ -49,23 +49,26 @@ const Friendrequests = () => {
                 <BsThreeDotsVertical />
             </div>
             <div className="list">
-                <ul>
-                    {friendRequest.map((item) => (
-                        <li key={item.id}>
-                            <div className="left">
-                                <img src="../avatar.svg" alt="" />
-                                <div className="text">
-                                    <h4>{item.sendername}</h4>
-                                    <p>Love You.....</p>
+                {friendRequest.length
+                    ? <ul>
+                        {friendRequest.map((item) => (
+                            <li key={item.id}>
+                                <div className="left">
+                                    <img src="../avatar.svg" alt="" />
+                                    <div className="text">
+                                        <h4>{item.sendername}</h4>
+                                        <p>Love You.....</p>
+                                    </div>
                                 </div>
-                            </div>
-                            <div className="right button_section_req">
-                                <div onClick={() => handleFriendRequestConfirm(item)} className="btn confirm">Confirm</div>
-                                <div onClick={() => handleFriendRequestCancel(item)} className="btn cancel">Cancel</div>
-                            </div>
-                        </li>
-                    ))}
-                </ul>
+                                <div className="right button_section_req">
+                                    <div onClick={() => handleFriendRequestConfirm(item)} className="btn confirm">Confirm</div>
+                                    <div onClick={() => handleFriendRequestCancel(item)} className="btn cancel">Cancel</div>
+                                </div>
+                            </li>
+                        ))}
+                    </ul>
+                    : <p>No Friend Request</p>
+                }
             </div>
         </div>
     )
