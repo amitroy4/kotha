@@ -12,7 +12,6 @@ const Group = () => {
     let userData = useSelector((state) => state.loginUser.loginUser)
     let [groupMemberList, setGroupMemberList] = useState([])
     let [membersList, setMembersList] = useState([])
-    let [joinedList, setJoinedList] = useState([])
 
     useEffect(() => {
         const groupsRef = ref(db, 'groups/');
@@ -35,13 +34,12 @@ const Group = () => {
         const membersRef = ref(db, 'members/');
         onValue(membersRef, (snapshot) => {
             let arr = [];
-            let joinArr = [];
             snapshot.forEach(item => {
-                arr.push(item.val().groupid);
-                joinArr.push(item.val().userid)
+                if (item.val().userid == userData.uid) {
+                    arr.push(item.val().groupid);
+                }
             })
             setMembersList(arr)
-            setJoinedList(joinArr)
         });
     }, [])
 
@@ -96,7 +94,7 @@ const Group = () => {
                                     </div>
                                 </div>
                                 <div className="right button_section">
-                                    {membersList.includes(item.groupid) && joinedList.includes(userData.uid)
+                                    {membersList.indexOf(item.groupid) != -1
                                         ? <div className="btn">Joined</div>
                                         : groupMemberList.indexOf(item.groupid) != -1
                                             ? <>
