@@ -4,7 +4,7 @@ import { TextField } from '@mui/material'
 import { BsSearch, BsThreeDotsVertical } from 'react-icons/bs';
 
 import { useSelector } from 'react-redux';
-import { getDatabase, ref, set, push, onValue } from "firebase/database";
+import { getDatabase, ref, set, push, onValue, remove } from "firebase/database";
 
 const Group = () => {
     const db = getDatabase();
@@ -69,6 +69,20 @@ const Group = () => {
     }, [])
 
 
+    let handleGroupCancel = (cancel) => {
+        const groupsRef = ref(db, 'grouprequest/');
+        let groupCancel = "";
+        onValue(groupsRef, (snapshot) => {
+            snapshot.forEach(item => {
+                if (item.val().groupid == cancel.groupid && item.val().userid == userData.uid) {
+                    groupCancel = item.key;
+                }
+            })
+        });
+        remove(ref(db, "grouprequest/" + groupCancel));
+    }
+
+
 
     return (
         <div className="box">
@@ -99,7 +113,7 @@ const Group = () => {
                                         : groupMemberList.indexOf(item.groupid) != -1
                                             ? <>
                                                 <div className="btn">Request Send</div>
-                                                <div className="btn">Cancel</div>
+                                                <div onClick={() => handleGroupCancel(item)} className="btn">Cancel</div>
                                             </>
                                             : <div onClick={() => handleGroupJoin(item)} className="btn">Add</div>
                                     }
